@@ -3,9 +3,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('./model');
+const jwt = require('jwt-simple');
+const config = require('../config');
 
-function getModel () {
-  return require(`./model`);
+const tokenForUser = (user) => {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.get('JWT_SECRET'));
 }
 
 const router = express.Router();
@@ -58,7 +61,8 @@ router.post('/', (req, res, next) => {
                     next(err);
                     return;
                 }
-                res.json(entity);
+                
+                res.json({ token: tokenForUser(entity) });
                 });
             });
 

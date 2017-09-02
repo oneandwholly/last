@@ -2,6 +2,7 @@
 
 const mysql = require('mysql');
 const config = require('../config');
+const bcrypt = require('bcrypt-nodejs')
 
 const options = {
   user: config.get('MYSQL_USER'),
@@ -31,13 +32,28 @@ const connection = mysql.createConnection(options);
 // }
 
 function create (data, cb) {
-  connection.query('INSERT INTO `users` SET ?', data, (err, res) => {
-    if (err) {
-      cb(err);
-      return;
-    }
-    read(res.insertId, cb);
+
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) { return cb(err); }
+
+    // hash (encrypt) password with salt
+    bcrypt.hash(data.password, salt, null, (err, hash) => {
+      if (err) { return cb(err); }
+
+      // overwrite plain text password w/ encrypted password
+      data.password = hash;
+
+      connection.query('INSERT INTO `users` SET ?', data, (err, res) => {
+        if (err) {
+          cb(err);
+          return;
+        }
+        read(res.insertId, cb);
+      });
+
+    });
   });
+
 }
 
 function read (id, cb) {
