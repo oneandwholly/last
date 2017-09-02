@@ -6,10 +6,16 @@
   "author": "Jon Huh <oneandwholly@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.4",
-    "password-generator": "^2.1.0"
+    "lodash": "^4.17.4",
+    "mysql": "^2.14.1",
+    "nconf": "^0.8.4",
+    "password-generator": "^2.1.0",
+    "prompt": "^1.0.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "init-cloudsql": "node init-cloudsql.js"
   }
 }

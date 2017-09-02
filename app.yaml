@@ -1,0 +1,7 @@
+runtime: nodejs
+env: flex
+beta_settings:
+  cloud_sql_instances: insta-777:us-central1:library
+# Temporary setting to keep gcloud from uploading node_modules
+skip_files:
+ - ^node_modules$
