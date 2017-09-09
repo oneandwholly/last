@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 const config = require('../config');
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs');
 
 const options = {
   user: config.get('MYSQL_USER'),
@@ -15,21 +15,6 @@ if (config.get('INSTANCE_CONNECTION_NAME') && config.get('NODE_ENV') === 'produc
 }
 
 const connection = mysql.createConnection(options);
-
-// function list (limit, token, cb) {
-//   token = token ? parseInt(token, 10) : 0;
-//   connection.query(
-//     'SELECT * FROM `books` LIMIT ? OFFSET ?', [limit, token],
-//     (err, results) => {
-//       if (err) {
-//         cb(err);
-//         return;
-//       }
-//       const hasMore = results.length === limit ? token + results.length : false;
-//       cb(null, results, hasMore);
-//     }
-//   );
-// }
 
 function create (data, cb) {
 
@@ -88,7 +73,7 @@ function _delete (id, cb) {
   connection.query('DELETE FROM `users` WHERE `id` = ?', id, cb);
 }
 
-function getOneByUsername (username, cb) {
+function readByUsername (username, cb) {
   connection.query(
     'SELECT * FROM `users` WHERE `username` = ?', username, (err, results) => {
       if (!err && !results.length) {
@@ -105,7 +90,7 @@ function getOneByUsername (username, cb) {
     });
 }
 
-function getOneByEmail (email, cb) {
+function readByEmail (email, cb) {
   connection.query(
     'SELECT * FROM `users` WHERE `email` = ?', email, (err, results) => {
       if (!err && !results.length) {
@@ -122,12 +107,19 @@ function getOneByEmail (email, cb) {
     });
 }
 
+function comparePassword (candidatePassword, userPassword, done) {
+  bcrypt.compare(candidatePassword, userPassword, function(err, isMatch) {
+    if (err) { return done(err); }
+    done(null, isMatch);
+  });
+}
+
 module.exports = {
-  // list: list,
   create: create,
   read: read,
   update: update,
   delete: _delete,
-  getOneByUsername: getOneByUsername, 
-  getOneByEmail: getOneByEmail
+  readByUsername: readByUsername, 
+  readByEmail: readByEmail,
+  comparePassword: comparePassword
 };

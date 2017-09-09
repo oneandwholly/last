@@ -16,6 +16,9 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 //   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 // });
 
+// Auth
+app.use('/api/auth', require('./auth/api'));
+
 // Users
 app.use('/api/users', require('./users/api'));
 
