@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Signup from './Signup';
 import Login from './Login';
+import { bindActionCreators } from 'redux'
 
 class LandingPage extends Component {
   constructor(props) {
@@ -12,9 +13,13 @@ class LandingPage extends Component {
   }
 
   componentWillMount() {
+    this.props.hideTopNav()
+    this.props.hideBottomNav();
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillUnmount() {
+    this.props.showTopNav()
+    this.props.showBottomNav();
   }
 
   toggleDisplay() {
@@ -39,4 +44,11 @@ class LandingPage extends Component {
 export { LandingPage };
 
 // The default export is the connected component.
-export default connect()(LandingPage);
+export default connect(null, (dispatch, ownProps) => {
+  return { 
+    hideTopNav: bindActionCreators(ownProps.navActions.hideTopNav, dispatch),
+    showTopNav: bindActionCreators(ownProps.navActions.showTopNav, dispatch),
+    hideBottomNav: bindActionCreators(ownProps.navActions.hideBottomNav, dispatch),
+    showBottomNav: bindActionCreators(ownProps.navActions.showBottomNav, dispatch),
+  }
+})(LandingPage);

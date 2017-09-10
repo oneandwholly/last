@@ -57,7 +57,9 @@ const renderAlert = (error) => {
 const Signup = props => {
   const { handleSubmit, pristine, submitting } = props
   return (
-    <form onSubmit={handleSubmit(props.submitSignup)}>
+    <form onSubmit={handleSubmit((data) => {
+        props.submitSignup(data);
+      })}>
       <Field name="username" type="text" component={renderField} label="Username" />
       <Field name="email" type="email" component={renderField} label="Email" />
       <Field name="password" type="password" component={renderField} label="Password" />
